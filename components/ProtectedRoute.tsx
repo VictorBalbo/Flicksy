@@ -5,7 +5,7 @@ import { ReactNode, useEffect } from "react";
 interface ProtectedRouteProps {
   children: ReactNode;
 }
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { accessToken, login } = useAuthContext();
   const router = useRouter();
   useEffect(() => {
@@ -16,4 +16,4 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }, [accessToken, login, router]);
 
   return children;
-}
+};

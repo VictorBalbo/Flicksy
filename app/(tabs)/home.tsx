@@ -1,5 +1,5 @@
-import ProtectedRoute from "@/components/AuthRoute";
 import { Carousel, WindowDimensions } from "@/components/Carousel/Carousel";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { useThemeColor } from "@/hooks";
 import { useCallback, useState } from "react";

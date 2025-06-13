@@ -6,7 +6,7 @@ const redirectUri = AuthSession.makeRedirectUri({
   path: "trakt-redirect",
   preferLocalhost: true,
 });
-console.log("Redirect URI:", redirectUri, TraktClientId);
+
 export const loginWithTrakt = async () => {
   const discovery = {
     authorizationEndpoint: "https://api.trakt.tv/oauth/authorize",
