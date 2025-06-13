@@ -1,3 +1,4 @@
+import { TokenResponse } from "expo-auth-session";
 import * as SecureStore from "expo-secure-store";
 import {
   createContext,
@@ -9,7 +10,7 @@ import {
 
 interface AuthContextType {
   accessToken: string | null;
-  login: (token: string) => Promise<void>;
+  login: (token: TokenResponse) => Promise<void>;
   logout: () => Promise<void>;
 }
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,16 +24,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const checkLoginStatus = async () => {
-      const token = await SecureStore.getItemAsync("accessToken");
-
+      const token = await SecureStore.getItemAsync("traktAccessToken");
+      console.log("Checking login status...");
       if (token) setAccessToken(token);
     };
     checkLoginStatus();
   }, []);
 
-  const login = async (token: string) => {
-    await SecureStore.setItemAsync("accessToken", token);
-    setAccessToken(token);
+  const login = async (token: TokenResponse) => {
+    await SecureStore.setItemAsync("traktAccessToken", token.accessToken);
+    if (token.issuedAt && token.expiresIn) {
+      const expiresAt = (token.issuedAt + token.expiresIn) * 1000;
+      await SecureStore.setItemAsync("traktTokenExpiresAt", `${expiresAt}`);
+    }
+    if (token.refreshToken) {
+      await SecureStore.setItemAsync("traktRefreshToken", token.refreshToken);
+    }
+    setAccessToken(token.accessToken);
   };
 
   const logout = async () => {
@@ -47,4 +55,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuthContext = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useMapContext must be used within an MapProvider");
+  }
+  return context;
+};

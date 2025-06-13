@@ -1,0 +1,1 @@
+export const TraktClientId = process.env.TRAKT_CLIENT_ID ?? "";

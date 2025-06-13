@@ -1,3 +1,4 @@
+import ProtectedRoute from "@/components/AuthRoute";
 import { Carousel, WindowDimensions } from "@/components/Carousel/Carousel";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { useThemeColor } from "@/hooks";
@@ -55,16 +56,18 @@ export default function Home() {
   }, []);
 
   return (
-    <SafeAreaView
-      style={[{ backgroundColor }, styles.container]}
-      onLayout={onLayout}
-    >
-      <Carousel data={data} dimensions={dimensions} />
+    <ProtectedRoute>
+      <SafeAreaView
+        style={[{ backgroundColor }, styles.container]}
+        onLayout={onLayout}
+      >
+        <Carousel data={data} dimensions={dimensions} />
 
-      <ThemedText>Teste4</ThemedText>
+        <ThemedText>Teste4</ThemedText>
 
-      <ThemedText>Teste2</ThemedText>
-    </SafeAreaView>
+        <ThemedText>Teste2</ThemedText>
+      </SafeAreaView>
+    </ProtectedRoute>
   );
 }
 
