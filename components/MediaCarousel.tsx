@@ -1,4 +1,5 @@
 import { getThemeProperty } from "@/hooks";
+import { MediaBase } from "@/models/media";
 import { ImageStyle, StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
@@ -14,13 +15,9 @@ export interface WindowDimensions {
   width: number;
   height: number;
 }
-export interface CarouselItem {
-  id: string;
-  title: string;
-  imageUrl: string;
-}
+
 interface CarouselProps {
-  data: CarouselItem[];
+  data: MediaBase[];
   dimensions: WindowDimensions;
 }
 export const Carousel = ({ data, dimensions }: CarouselProps) => {
@@ -73,7 +70,7 @@ export const Carousel = ({ data, dimensions }: CarouselProps) => {
           return (
             <Animated.View style={[styles.card]}>
               <Animated.Image
-                source={{ uri: item.imageUrl }}
+                source={{ uri: item.images?.backdrop }}
                 style={[
                   styles.image,
                   useParalax && [imageParallaxStyle],

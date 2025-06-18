@@ -1,5 +1,5 @@
 import { useAuthContext } from "@/hooks/authContext";
-import { loginWithTrakt } from "@/services/traktService";
+import { loginWithTrakt } from "@/services/TraktService";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 
