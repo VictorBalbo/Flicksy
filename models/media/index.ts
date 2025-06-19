@@ -1,2 +1,2 @@
-export { Ids, Media, MediaImages, MediaType } from "./Media";
+export { Media, MediaImages, MediaType } from "./Media";
 

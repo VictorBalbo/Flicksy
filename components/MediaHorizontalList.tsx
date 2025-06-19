@@ -1,5 +1,6 @@
 import { getThemeProperty } from "@/hooks";
 import { Media } from "@/models/media";
+import { MediaImageService } from "@/services/MediaImageService";
 import {
   FlatList,
   Image,
@@ -8,6 +9,7 @@ import {
   StyleSheet,
   ViewStyle,
 } from "react-native";
+import { TextType, ThemedText } from "./ui/ThemedText";
 import { ThemedView } from "./ui/ThemedView";
 
 type Props = {
@@ -17,7 +19,6 @@ type Props = {
 };
 
 const HorizontalContentList = ({ data, itemSize = 120, style }: Props) => {
-  const aspectRatio = 2 / 3;
   return (
     <ThemedView>
       <FlatList
@@ -25,20 +26,27 @@ const HorizontalContentList = ({ data, itemSize = 120, style }: Props) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={[style, styles.listContainer]}
         data={data}
-        keyExtractor={(item) => item.tmdb_id}
+        keyExtractor={(item) => item.tmdb_id.toString()}
         renderItem={({ item }) => (
-          <Pressable>
+          <Pressable style={{ width: itemSize }}>
             <Image
-              source={{ uri: item.images?.poster }}
-              style={[
-                styles.image,
-                {
-                  width: itemSize,
-                  height: itemSize / aspectRatio,
-                },
-              ]}
-              resizeMode="cover"
+              source={{
+                uri: MediaImageService.getImageSrc(
+                  item.images,
+                  "poster",
+                  itemSize
+                ),
+              }}
+              style={styles.image}
             />
+            <ThemedText type={TextType.Smalltitle} numberOfLines={1}>
+              {item.title}
+            </ThemedText>
+            {item.release_date && (
+              <ThemedText type={TextType.Small}>
+                {new Date(item.release_date).getFullYear()}
+              </ThemedText>
+            )}
           </Pressable>
         )}
       />
@@ -54,7 +62,10 @@ const styles = StyleSheet.create({
   },
   image: {
     borderRadius: smallSpacing,
-    backgroundColor: "#ccc", // Placeholder background while loading
+    backgroundColor: "#ccc",
+    width: "100%",
+    aspectRatio: 2 / 3,
+    resizeMode: "cover",
   },
 });
 

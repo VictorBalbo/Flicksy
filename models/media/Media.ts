@@ -1,28 +1,31 @@
 export interface Media {
-  title: string
-  tmdb_id: string
-  imdb_id: string
-  media_type: MediaType
-  images?: MediaImages
+  title: string;
+  tmdb_id: number;
+  imdb_id?: string;
+  media_type: MediaType;
+  release_date?: string
+  images?: MediaImages;
 }
 
-export interface Ids {
-  trakt: number
-  tmdb: number
-  slug?: string
-  imdb?: string
-  justwatch?: string
+export interface MediaDetails extends Media {
+  genres?: string[]
+  overview?: string
+  status?: string
+  tagline?: string
 }
 
 export enum MediaType {
-  Movie = 'movie',
-  Show = 'show',
-  Season = 'season',
-  Episode = 'episode',
+  Movie = "movie",
+  Show = "tv",
+  Season = "season",
+  Episode = "episode",
 }
 
 export interface MediaImages {
-  backdrop?: string
-  poster?: string
-  still?: string
+  backdrop?: string;
+  backdrop_clear?: string
+  poster?: string;
+  poster_clear?: string
+  logo?: string
+  still?: string;
 }
