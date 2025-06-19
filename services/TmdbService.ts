@@ -1,6 +1,6 @@
 import { TmdbKey } from "@/constants";
-import { Media, MediaType } from "@/models/media";
-import { getMovieFromTmdbMovie } from "@/models/media/MovieDetails";
+import { Media, MediaType } from "@/models";
+import { getMovieFromTmdbMovie } from "@/models/MovieDetails";
 import {
   TmdbListResponse,
   TmdbMovieDetails,
@@ -24,7 +24,7 @@ export class TmdbService {
   };
 
   static getPopularMovies = async () => {
-    let url = `/movie/popular`;
+    let url = `/trending/movie/week`;
     const tmdbPopularMovie = await this.sendTmdbGetRequest<
       TmdbListResponse<TmdbMovieDetails>
     >(url);

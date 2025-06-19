@@ -1,4 +1,4 @@
-import { MediaImages } from "@/models/media";
+import { MediaImages } from "@/models";
 import { PixelRatio } from "react-native";
 
 export class MediaImageService {
@@ -18,6 +18,9 @@ export class MediaImageService {
     imageSize: number
   ) => {
     const imagePath = images?.[imageType];
+    if (imagePath?.startsWith("http")) {
+      return imagePath;
+    }
     const deviceDPI = PixelRatio.get();
     const targetWidth = imageSize * deviceDPI;
     const targetSize = this.imageSizes[imageType].find((s) => s > targetWidth);

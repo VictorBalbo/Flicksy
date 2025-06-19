@@ -1,5 +1,5 @@
-import { TmdbMovieDetails } from "../tmdb";
-import { MediaDetails, MediaType } from "./Media";
+import { MediaDetails, MediaType } from ".";
+import { TmdbMovieDetails } from "./tmdb";
 
 export interface MovieDetails extends MediaDetails {
   media_type: MediaType.Movie;

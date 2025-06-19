@@ -1,5 +1,5 @@
 import { getThemeProperty } from "@/hooks";
-import { Media } from "@/models/media";
+import { Media } from "@/models";
 import { MediaImageService } from "@/services/MediaImageService";
 import {
   FlatList,
@@ -14,19 +14,26 @@ import { ThemedView } from "./ui/ThemedView";
 
 type Props = {
   data: Media[];
+  name: string;
   itemSize?: number; // Optional: Allows you to control size of the images
   style?: StyleProp<ViewStyle>;
 };
 
-const HorizontalContentList = ({ data, itemSize = 120, style }: Props) => {
+const HorizontalContentList = ({
+  data,
+  name,
+  itemSize = 120,
+  style,
+}: Props) => {
   return (
-    <ThemedView>
+    <ThemedView style={style}>
+      <ThemedText type={TextType.Subtitle}>{name}</ThemedText>
       <FlatList
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[style, styles.listContainer]}
+        contentContainerStyle={styles.listContainer}
         data={data}
-        keyExtractor={(item) => item.tmdb_id.toString()}
+        keyExtractor={(item) => `${item.tmdb_id}${item.imdb_id}`}
         renderItem={({ item }) => (
           <Pressable style={{ width: itemSize }}>
             <Image
@@ -44,7 +51,7 @@ const HorizontalContentList = ({ data, itemSize = 120, style }: Props) => {
             </ThemedText>
             {item.release_date && (
               <ThemedText type={TextType.Small}>
-                {new Date(item.release_date).getFullYear()}
+                {new Date(item.release_date).getUTCFullYear()}
               </ThemedText>
             )}
           </Pressable>

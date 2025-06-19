@@ -2,13 +2,15 @@ import { Carousel, WindowDimensions } from "@/components/MediaCarousel";
 import HorizontalContentList from "@/components/MediaHorizontalList";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { getThemeProperty, useThemeColor } from "@/hooks";
-import { Media, MediaType } from "@/models/media";
+import { Catalog, Media, MediaType } from "@/models";
+import { PluginService } from "@/services/PluginService";
 import { TmdbService } from "@/services/TmdbService";
 import { useCallback, useEffect, useState } from "react";
 import {
   Dimensions,
   LayoutChangeEvent,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
 } from "react-native";
 
@@ -16,6 +18,7 @@ export default function Home() {
   const backgroundColor = useThemeColor("backgroundSoft");
   const [popularMovies, setPopularMovies] = useState<Media[]>([]);
   const [popularShows, setPopularShows] = useState<Media[]>([]);
+  const [catalogs, setCatalogs] = useState<Catalog[]>([]);
   useEffect(() => {
     const getPopularMovies = async () => {
       const movies = await TmdbService.getPopularMovies();
@@ -25,9 +28,18 @@ export default function Home() {
       const shows = await TmdbService.getPopularShows();
       setPopularShows(shows);
     };
-    
+
     getPopularMovies();
-    getPopularShows()
+    getPopularShows();
+  }, []);
+
+  useEffect(() => {
+    const getStoredPlugins = async () => {
+      const catalogs = await PluginService.getMediaFromCatalogs();
+      setCatalogs(catalogs);
+    };
+
+    getStoredPlugins();
   }, []);
 
   const data: Media[] = [
@@ -107,24 +119,43 @@ export default function Home() {
       style={[{ backgroundColor }, styles.container]}
       onLayout={onLayout}
     >
-      <Carousel data={data} dimensions={dimensions} />
-      <HorizontalContentList data={popularMovies} style={styles.contentList} />
-      <HorizontalContentList data={popularShows} style={styles.contentList} />
+      <ScrollView>
+        <Carousel data={data} dimensions={dimensions} />
+        <HorizontalContentList
+          name="Trending on TMDB"
+          data={popularMovies}
+          style={styles.contentList}
+        />
+        <HorizontalContentList
+          name="Trending on TMDB"
+          data={popularShows}
+          style={styles.contentList}
+        />
+        {catalogs.map((c, i) => (
+          <HorizontalContentList
+            key={i}
+            name={c.name}
+            data={c.medias}
+            style={styles.contentList}
+          />
+        ))}
 
-      <ThemedText>Teste4</ThemedText>
+        <ThemedText>Teste4</ThemedText>
 
-      <ThemedText>Teste2</ThemedText>
+        <ThemedText>Teste2</ThemedText>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const smallSpacing = getThemeProperty("smallSpacing");
+const largeSpacing = getThemeProperty("largeSpacing");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   contentList: {
-    marginTop: smallSpacing,
+    marginTop: largeSpacing,
     paddingHorizontal: smallSpacing,
   },
 });

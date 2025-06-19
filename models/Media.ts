@@ -1,6 +1,6 @@
 export interface Media {
   title: string;
-  tmdb_id: number;
+  tmdb_id?: number;
   imdb_id?: string;
   media_type: MediaType;
   release_date?: string

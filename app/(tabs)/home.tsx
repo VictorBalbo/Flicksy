@@ -1,4 +1,4 @@
-import { Carousel, WindowDimensions } from "@/components/Carousel/Carousel";
+import { Carousel, WindowDimensions } from "@/components/MediaCarousel";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { useThemeColor } from "@/hooks";
