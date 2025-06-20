@@ -20,10 +20,10 @@ export const ExpandableText = ({
 
   const handleTextLayout = (e: any) => {
     if (totalLines) return;
-    const currentLines = e.nativeEvent.lines;
+    const currentLines = e.nativeEvent.lines.length as number;
     setTotalLines(currentLines);
 
-    if (currentLines.length > lines) {
+    if (currentLines > lines) {
       setShowExpandArrow(true);
       setIsExpanded(false);
     } else {
@@ -46,10 +46,7 @@ export const ExpandableText = ({
         {text}
       </ThemedText>
       {showExpandArrow && (
-        <Icon
-          name={isExpanded ? "chevron.up" : "chevron.down"}
-          style={styles.arrow}
-        />
+        <Icon name={isExpanded ? "chevron.up" : "chevron.down"} size={16} />
       )}
     </Pressable>
   );
@@ -60,10 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  text: { flex: 1 },
-  arrow: {
-    marginLeft: 6,
-    fontSize: 16,
-    color: "gray",
+  text: {
+    flex: 1,
   },
 });

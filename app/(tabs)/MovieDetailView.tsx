@@ -120,8 +120,8 @@ const MovieDetailView = () => {
           {(!movie.images?.logo || !logoAspectRatio) && (
             <ThemedText type={TextType.Title}>{movie.title}</ThemedText>
           )}
-          <ThemedText type={TextType.Helper}>
-            {movie.genres?.slice(0, 3).join(" · ")}
+          <ThemedText type={TextType.Small}>
+            {movie.genres?.slice(0, 2).join(" · ")}
             {" • "}
             {TimeHelper.formatMinutesToTime(movie.runtime)}
             {" • "}
@@ -129,9 +129,11 @@ const MovieDetailView = () => {
           </ThemedText>
           {movie.tagline && (
             <ThemedView style={styles.taglineContainer}>
-              <Icon name="quote.opening" size={textSize} />
-              <ThemedText type={TextType.Bold}>{movie.tagline}</ThemedText>
-              <Icon name="quote.closing" size={textSize} />
+              <Icon name="quote.opening" size={fontSize} />
+              <ThemedText type={TextType.Bold} style={styles.tagline}>
+                {movie.tagline}
+              </ThemedText>
+              <Icon name="quote.closing" size={fontSize} />
             </ThemedView>
           )}
           {movie.overview && <ExpandableText text={movie.overview} lines={2} />}
@@ -144,7 +146,7 @@ export default MovieDetailView;
 
 const smallSpacing = getThemeProperty("smallSpacing");
 const largeSpacing = getThemeProperty("largeSpacing");
-const textSize = getThemeProperty("textSize");
+const fontSize = getThemeProperty("fontSize");
 const styles = StyleSheet.create({
   header: {
     position: "relative",
@@ -171,11 +173,16 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: "75%",
-    maxHeight: 10 * textSize,
+    maxHeight: 10 * fontSize,
     resizeMode: "contain",
   },
   taglineContainer: {
     flexDirection: "row",
     gap: smallSpacing,
+    justifyContent: "center",
+  },
+  tagline: {
+    flexShrink: 1,
+    textAlign: "center",
   },
 });

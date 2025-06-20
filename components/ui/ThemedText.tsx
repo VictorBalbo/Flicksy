@@ -7,7 +7,6 @@ export enum TextType {
   Subtitle = "subtitle",
   Smalltitle = "smalltitle",
   Text = "text",
-  Helper = "helper",
   Bold = "bold",
   Small = "small",
 }
@@ -42,10 +41,6 @@ export const ThemedText = ({
       color = textColor;
       typeStyle = styles.text;
       break;
-    case "helper":
-      color = helperTextColor;
-      typeStyle = styles.text;
-      break;
     case "bold":
       color = textColor;
       typeStyle = styles.bold;
@@ -60,31 +55,31 @@ export const ThemedText = ({
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: Theme.base.textSize * 2,
-    lineHeight: Theme.base.textSize * 2.5,
+    fontSize: Theme.base.fontSize * 2,
+    lineHeight: Theme.base.fontSize * 2.5,
     fontWeight: "bold",
   },
   subtitle: {
-    fontSize: Theme.base.textSize * 1.5,
-    lineHeight: Theme.base.textSize * 1.875,
+    fontSize: Theme.base.fontSize * 1.5,
+    lineHeight: Theme.base.fontSize * 1.875,
     fontWeight: "bold",
   },
   smalltitle: {
-    fontSize: Theme.base.textSize * 0.75,
-    lineHeight: Theme.base.textSize * 1,
+    fontSize: Theme.base.fontSize * 0.75,
+    lineHeight: Theme.base.fontSize * 1,
     fontWeight: "bold",
   },
   text: {
-    fontSize: Theme.base.textSize,
-    lineHeight: Theme.base.textSize * 1.25,
+    fontSize: Theme.base.fontSize,
+    lineHeight: Theme.base.fontSize * 1.25,
   },
   bold: {
-    fontSize: Theme.base.textSize,
-    lineHeight: Theme.base.textSize * 1.25,
+    fontSize: Theme.base.fontSize,
+    lineHeight: Theme.base.fontSize * 1.25,
     fontWeight: "600",
   },
   small: {
-    fontSize: Theme.base.textSize * 0.75,
-    lineHeight: Theme.base.textSize * 0.875,
+    fontSize: Theme.base.fontSize * 0.875,
+    lineHeight: Theme.base.fontSize * 1,
   },
 });

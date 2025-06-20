@@ -13,7 +13,7 @@ export type BaseScheme = {
   smallSpacing: number;
   largeSpacing: number;
   borderRadius: number;
-  textSize: number;
+  fontSize: number;
 };
 
 export type ThemeScheme = {
@@ -65,6 +65,6 @@ export const Theme: ThemeScheme = {
     smallSpacing: 8,
     largeSpacing: 16,
     borderRadius: 16,
-    textSize: 16,
+    fontSize: 16,
   },
 };
