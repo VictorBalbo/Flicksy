@@ -7,6 +7,7 @@ export enum TextType {
   Subtitle = "subtitle",
   Smalltitle = "smalltitle",
   Text = "text",
+  Helper = "helper",
   Bold = "bold",
   Small = "small",
 }
@@ -39,6 +40,10 @@ export const ThemedText = ({
       break;
     case "text":
       color = textColor;
+      typeStyle = styles.text;
+      break;
+    case "helper":
+      color = helperTextColor;
       typeStyle = styles.text;
       break;
     case "bold":

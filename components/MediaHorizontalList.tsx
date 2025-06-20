@@ -1,6 +1,7 @@
 import { getThemeProperty } from "@/hooks";
 import { Media } from "@/models";
 import { MediaImageService } from "@/services/MediaImageService";
+import { useRouter } from "expo-router";
 import {
   FlatList,
   Image,
@@ -25,6 +26,7 @@ const HorizontalContentList = ({
   itemSize = 120,
   style,
 }: Props) => {
+  const router = useRouter();
   return (
     <ThemedView style={style}>
       <ThemedText type={TextType.Subtitle}>{name}</ThemedText>
@@ -35,7 +37,15 @@ const HorizontalContentList = ({
         data={data}
         keyExtractor={(item) => `${item.tmdb_id}${item.imdb_id}`}
         renderItem={({ item }) => (
-          <Pressable style={{ width: itemSize }}>
+          <Pressable
+            style={{ width: itemSize }}
+            onPress={() =>
+              router.navigate({
+                pathname: "/(tabs)/MovieDetailView",
+                params: { imdb_id: item.imdb_id, tmdb_id: item.tmdb_id },
+              })
+            }
+          >
             <Image
               source={{
                 uri: MediaImageService.getImageSrc(

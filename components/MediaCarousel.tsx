@@ -1,5 +1,5 @@
 import { getThemeProperty } from "@/hooks";
-import { MediaBase } from "@/models/media";
+import { Media } from "@/models";
 import { ImageStyle, StyleSheet, View } from "react-native";
 import Animated, {
   Extrapolation,
@@ -17,7 +17,7 @@ export interface WindowDimensions {
 }
 
 interface CarouselProps {
-  data: MediaBase[];
+  data: Media[];
   dimensions: WindowDimensions;
 }
 export const Carousel = ({ data, dimensions }: CarouselProps) => {

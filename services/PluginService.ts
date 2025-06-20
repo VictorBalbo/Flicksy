@@ -25,7 +25,7 @@ export class PluginService {
           tmdb_id: m.moviedb_id,
           imdb_id: m.imdb_id,
           media_type: MediaType.Movie,
-          release_date: m.released ?? m.releaseInfo,
+          release_date: m.released ?? (m.releaseInfo && parseInt(m.releaseInfo).toString()),
           images: {
             backdrop_clear: m.background,
             poster: m.poster,
