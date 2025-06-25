@@ -18,7 +18,7 @@ export class TmdbService {
   };
 
   static getMovieDetail = async (tmdb_id: string) => {
-    let url = `/movie/${tmdb_id}?append_to_response=external_ids,images&language=${this.language},null`;
+    let url = `/movie/${tmdb_id}?append_to_response=external_ids,videos,images&language=${this.language},null`;
     const tmdbMovie = await this.sendTmdbGetRequest<TmdbMovieDetails>(url);
     return getMovieFromTmdbMovie(tmdbMovie, this.language);
   };

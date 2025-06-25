@@ -1,8 +1,8 @@
 import { Catalog, Media, MediaType } from "@/models";
 import {
-  PluginCatalog,
   PluginCatalogResponse,
   PluginManifest,
+  PluginStreamResponse,
 } from "@/models/plugins";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
@@ -11,60 +11,81 @@ export class PluginService {
   private static readonly STORED_PLUGINS_KEY = "storedPlugins";
 
   static getMediaFromCatalogs = async () => {
-    const catalogs = await this.getCatalogs();
-    const catalogsPromise = catalogs.map(async (c) => {
-      console.log(`${c.url}/catalog/${c.type}/${c.id}.json`);
-      const mediasResponse = await fetch(
-        `${c.url}/catalog/${c.type}/${c.id}.json`
-      );
-      const pluginMedias =
-        (await mediasResponse.json()) as PluginCatalogResponse;
-      const medias = pluginMedias.metas.map((m): Media => {
-        return {
-          title: m.name,
-          tmdb_id: m.moviedb_id,
-          imdb_id: m.imdb_id,
-          media_type: MediaType.Movie,
-          release_date: m.released ?? (m.releaseInfo && parseInt(m.releaseInfo).toString()),
-          images: {
-            backdrop_clear: m.background,
-            poster: m.poster,
-          },
-        };
-      });
-      const catalog: Catalog = {
-        medias: medias,
-        name: c.name
-      }
-      return catalog;
-    });
-    return await Promise.all(catalogsPromise);
-  };
-
-  static getCatalogs = async () => {
-    const storedplugins = await this.getStoredPlugins();
-    const catalogPlugins = storedplugins.filter((plugin) =>
-      plugin.resources.some((resource) =>
-        typeof resource === "string"
-          ? resource === "catalog"
-          : resource.name === "catalog"
-      )
-    );
-
-    const catalogs = catalogPlugins.map(async (p) => {
+    const storedplugins = await this.getStoredPlugins("catalog");
+    const catalogsPromise = storedplugins.map(async (p) => {
       const pluginUrl = await SecureStore.getItemAsync(
         `${this.STORED_PLUGINS_KEY}-${p.id}`
       );
-      return p.catalogs.map((c): PluginCatalog => ({ ...c, url: pluginUrl }));
+      const catalogsPromise = p.catalogs.map(async (c) => {
+        const mediasResponse = await fetch(
+          `${pluginUrl}/catalog/${c.type}/${c.id}.json`
+        );
+        const pluginMedias =
+          (await mediasResponse.json()) as PluginCatalogResponse;
+        const medias = pluginMedias.metas.map((m): Media => {
+          return {
+            title: m.name,
+            tmdb_id: m.moviedb_id,
+            imdb_id: m.imdb_id,
+            media_type: MediaType.Movie,
+            release_date:
+              m.released ??
+              (m.releaseInfo && parseInt(m.releaseInfo).toString()),
+            images: {
+              backdrop_clear: m.background,
+              poster: m.poster,
+            },
+          };
+        });
+        const catalog: Catalog = {
+          medias: medias,
+          name: c.name,
+        };
+        return catalog;
+      });
+      return await Promise.all(catalogsPromise);
     });
-    return (await Promise.all(catalogs)).flat();
+    const mediaCatalogs = await Promise.all(catalogsPromise);
+    return mediaCatalogs.flatMap((c) => c);
   };
 
-  static getStoredPlugins = async () => {
+  static getStreamSources = async (media_type: MediaType, imdb_id: string) => {
+    const storedplugins = await this.getStreamPlugins();
+    const streamsPromise = storedplugins.map(async (p) => {
+      const pluginUrl = await SecureStore.getItemAsync(
+        `${this.STORED_PLUGINS_KEY}-${p.id}`
+      );
+      const streamsResponse = await fetch(
+        `${pluginUrl}/stream/${media_type}/${imdb_id}.json`
+      );
+      const contentStreams =
+        (await streamsResponse.json()) as PluginStreamResponse;
+      return contentStreams.streams;
+    });
+    const streams = await Promise.all(streamsPromise);
+    return streams.flatMap((s) => s);
+  };
+
+  static getStreamPlugins = async () => {
+    const storedplugins = await this.getStoredPlugins("stream");
+    return storedplugins;
+  };
+
+  static getStoredPlugins = async (resourceName?: string) => {
     const pluginsJson = await AsyncStorage.getItem(this.STORED_PLUGINS_KEY);
     if (!pluginsJson) return [];
     try {
-      return JSON.parse(pluginsJson) as PluginManifest[];
+      let plugins = JSON.parse(pluginsJson) as PluginManifest[];
+      if (resourceName) {
+        plugins = plugins.filter((plugin) =>
+          plugin.resources.some((resource) =>
+            typeof resource === "string"
+              ? resource === resourceName
+              : resource.name === resourceName
+          )
+        );
+      }
+      return plugins;
     } catch (e) {
       console.warn("Error parsing saved addons:", e);
       return [];

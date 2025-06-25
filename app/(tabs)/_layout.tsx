@@ -14,6 +14,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        animation: 'fade',
         tabBarActiveTintColor: 'white',
         headerShown: false,
         tabBarButton: HapticTab,
@@ -36,7 +37,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
+          title: 'New',
           tabBarIcon: ({ color }) => <Icon size={28} name="house.fill" color={color} />,
         }}
       />

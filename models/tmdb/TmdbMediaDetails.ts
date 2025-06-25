@@ -18,6 +18,7 @@ export interface TmdbMediaDetails {
   vote_count: number;
   external_ids: ExternalIds;
   images: Images;
+  videos: Videos;
 }
 
 interface Genre {
@@ -65,4 +66,20 @@ interface Image {
   vote_average: number;
   vote_count: number;
   width: number;
+}
+
+interface Videos {
+  results: Video[];
+}
+interface Video {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
 }

@@ -8,5 +8,4 @@ export interface TmdbMovieDetails extends TmdbMediaDetails {
   revenue: number;
   runtime: number;
   title: string;
-  video: boolean;
 }

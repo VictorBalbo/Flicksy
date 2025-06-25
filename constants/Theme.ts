@@ -27,12 +27,15 @@ export const Colors = {
   white: '#f0f0f0',
   whiteDeep: '#e4e4e7',
 
+  grayLight: '#c8c8d7',
   gray: '#73737C',
+
 
   blackLight: '#313133',
   black: '#1B1B1B',
   blackDeep: '#000000',
 
+  red: '#D70015',
   blue: '#007AFF',
   yellow: "#ffcc00",
 };
@@ -52,7 +55,7 @@ export const Theme: ThemeScheme = {
   },
   dark: {
     text: Colors.white,
-    helperText: Colors.gray,
+    helperText: Colors.grayLight,
     link: Colors.blue,
     background: Colors.blackDeep,
     backgroundSoft: Colors.black,
@@ -64,7 +67,7 @@ export const Theme: ThemeScheme = {
   base: {
     smallSpacing: 8,
     largeSpacing: 16,
-    borderRadius: 16,
+    borderRadius: 8,
     fontSize: 16,
   },
 };

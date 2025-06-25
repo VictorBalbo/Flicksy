@@ -41,7 +41,7 @@ const HorizontalContentList = ({
             style={{ width: itemSize }}
             onPress={() =>
               router.navigate({
-                pathname: "/(tabs)/MovieDetailView",
+                pathname: "/MovieDetailView",
                 params: { imdb_id: item.imdb_id, tmdb_id: item.tmdb_id },
               })
             }
@@ -72,13 +72,14 @@ const HorizontalContentList = ({
 };
 
 const smallSpacing = getThemeProperty("smallSpacing");
+const borderRadius = getThemeProperty("borderRadius");
 
 const styles = StyleSheet.create({
   listContainer: {
     gap: smallSpacing,
   },
   image: {
-    borderRadius: smallSpacing,
+    borderRadius: borderRadius,
     backgroundColor: "#ccc",
     width: "100%",
     aspectRatio: 2 / 3,

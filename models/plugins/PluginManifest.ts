@@ -17,7 +17,6 @@ interface Resources {
 }
 
 export interface PluginCatalog {
-  url: string | null
   type: string
   id: string
   genres?: string[]

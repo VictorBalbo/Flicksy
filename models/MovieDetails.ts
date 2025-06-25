@@ -35,4 +35,11 @@ export const getMovieFromTmdbMovie = (
     poster_clear: tmdbMovie.images.posters?.find((i) => i.iso_639_1 === null)
       ?.file_path,
   },
+  video: tmdbMovie.videos?.results.find(
+    (v) =>
+      v.official &&
+      v.site.toLowerCase() === "youtube" &&
+      v.type.toLowerCase() === "trailer"
+  )?.key,
+  providers: []
 });
