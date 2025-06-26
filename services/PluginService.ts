@@ -4,8 +4,7 @@ import {
   PluginManifest,
   PluginStreamResponse,
 } from "@/models/plugins";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store";
+import { UserSettingsService } from "./UserSettingsService";
 
 export class PluginService {
   private static readonly STORED_PLUGINS_KEY = "storedPlugins";
@@ -13,7 +12,7 @@ export class PluginService {
   static getMediaFromCatalogs = async () => {
     const storedplugins = await this.getStoredPlugins("catalog");
     const catalogsPromise = storedplugins.map(async (p) => {
-      const pluginUrl = await SecureStore.getItemAsync(
+      const pluginUrl = await UserSettingsService.getSensitiveSetting(
         `${this.STORED_PLUGINS_KEY}-${p.id}`
       );
       const catalogsPromise = p.catalogs.map(async (c) => {
@@ -50,9 +49,9 @@ export class PluginService {
   };
 
   static getStreamSources = async (media_type: MediaType, imdb_id: string) => {
-    const storedplugins = await this.getStreamPlugins();
+    const storedplugins = await this.getStoredPlugins("stream");
     const streamsPromise = storedplugins.map(async (p) => {
-      const pluginUrl = await SecureStore.getItemAsync(
+      const pluginUrl = await UserSettingsService.getSensitiveSetting(
         `${this.STORED_PLUGINS_KEY}-${p.id}`
       );
       const streamsResponse = await fetch(
@@ -66,30 +65,19 @@ export class PluginService {
     return streams.flatMap((s) => s);
   };
 
-  static getStreamPlugins = async () => {
-    const storedplugins = await this.getStoredPlugins("stream");
-    return storedplugins;
-  };
-
   static getStoredPlugins = async (resourceName?: string) => {
-    const pluginsJson = await AsyncStorage.getItem(this.STORED_PLUGINS_KEY);
-    if (!pluginsJson) return [];
-    try {
-      let plugins = JSON.parse(pluginsJson) as PluginManifest[];
-      if (resourceName) {
-        plugins = plugins.filter((plugin) =>
-          plugin.resources.some((resource) =>
-            typeof resource === "string"
-              ? resource === resourceName
-              : resource.name === resourceName
-          )
-        );
-      }
-      return plugins;
-    } catch (e) {
-      console.warn("Error parsing saved addons:", e);
-      return [];
-    }
+    const plugins = await UserSettingsService.getSetting<PluginManifest[]>(
+      this.STORED_PLUGINS_KEY
+    );
+    if (!plugins) return [];
+    if (!resourceName) return plugins;
+    return plugins.filter((plugin) =>
+      plugin.resources.some((resource) =>
+        typeof resource === "string"
+          ? resource === resourceName
+          : resource.name === resourceName
+      )
+    );
   };
 
   static addStoredPlugin = async (manifestUrl: string) => {
@@ -103,13 +91,13 @@ export class PluginService {
       plugin,
     ];
     try {
-      await SecureStore.setItemAsync(
+      await UserSettingsService.setSensitiveSetting(
         `${this.STORED_PLUGINS_KEY}-${plugin.id}`,
         pluginUrl
       );
-      await AsyncStorage.setItem(
+      await UserSettingsService.setSetting(
         this.STORED_PLUGINS_KEY,
-        JSON.stringify(updatedPlugins)
+        updatedPlugins
       );
     } catch (e) {
       console.error("Failed to save plugin:", e);

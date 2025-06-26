@@ -19,6 +19,7 @@ export interface TmdbMediaDetails {
   external_ids: ExternalIds;
   images: Images;
   videos: Videos;
+  credits: Credits;
 }
 
 interface Genre {
@@ -82,4 +83,21 @@ interface Video {
   official: boolean;
   published_at: string;
   id: string;
+}
+
+interface Credits {
+  cast: CastMember[];
+  crew: CrewMember[];
+}
+interface CastMember {
+  name: string;
+  profile_path?: string;
+  character: string
+}
+
+interface CrewMember {
+  name: string;
+  profile_path?: string;
+  department: string
+  job: string
 }

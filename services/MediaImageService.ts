@@ -9,6 +9,7 @@ export class MediaImageService {
     poster_clear: [92, 154, 185, 342, 500, 780],
     logo: [45, 92, 154, 185, 300, 500],
     still: [92, 185, 300],
+    profile: [45, 185],
   };
   static imageBasePath = "https://image.tmdb.org/t/p";
 
@@ -17,13 +18,28 @@ export class MediaImageService {
     imageType: keyof MediaImages,
     imageSize: number
   ) => {
-    const imagePath = images?.[imageType];
+    const imagePath = images?.[imageType] ?? images?.['backdrop_clear'] ?? images?.['backdrop'];
     if (imagePath?.startsWith("http")) {
       return imagePath;
     }
     const deviceDPI = PixelRatio.get();
     const targetWidth = imageSize * deviceDPI;
     const targetSize = this.imageSizes[imageType].find((s) => s > targetWidth);
+
+    if (targetSize) {
+      return `${this.imageBasePath}/w${targetSize}/${imagePath}`;
+    } else {
+      return `${this.imageBasePath}/original/${imagePath}`;
+    }
+  };
+
+  static getProfileImageSrc = (imagePath: string, imageSize: number) => {
+    if (imagePath?.startsWith("http")) {
+      return imagePath;
+    }
+    const deviceDPI = PixelRatio.get();
+    const targetWidth = imageSize * deviceDPI;
+    const targetSize = this.imageSizes['profile'].find((s) => s > targetWidth);
 
     if (targetSize) {
       return `${this.imageBasePath}/w${targetSize}/${imagePath}`;

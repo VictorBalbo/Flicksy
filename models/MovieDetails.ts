@@ -24,7 +24,7 @@ export const getMovieFromTmdbMovie = (
   tmdb_id: tmdbMovie.id,
   imdb_id: tmdbMovie.external_ids.imdb_id,
   images: {
-    logo: tmdbMovie.images.logos?.[0].file_path,
+    logo: tmdbMovie.images.logos?.[0]?.file_path,
     backdrop: tmdbMovie.images.backdrops?.find((i) => i.iso_639_1 === language)
       ?.file_path,
     backdrop_clear: tmdbMovie.images.backdrops?.find(
@@ -41,5 +41,13 @@ export const getMovieFromTmdbMovie = (
       v.site.toLowerCase() === "youtube" &&
       v.type.toLowerCase() === "trailer"
   )?.key,
-  providers: []
+  cast: tmdbMovie.credits.cast?.filter(c => c.character),
+  crew: {
+    directing: tmdbMovie.credits.crew.filter(
+      (d) => d.department === "Directing" && d.job === 'Director'
+    ),
+    writing: tmdbMovie.credits.crew.filter((d) => d.department === "Writing"),
+  },
+  providers: [],
+  ratings: {},
 });
